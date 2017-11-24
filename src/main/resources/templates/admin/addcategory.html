@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+
+    <form th:action="@{/logout}" method="get">
+        <button class="btn btn-md btn-danger btn-block" name="registration"
+                type="Submit">Logout
+        </button>
+    </form>
+
+    <div>
+        <a href="/admin/home"><button class="btn btn-md btn-danger btn-block" type="Submit">Home</button></a>
+    </div>
+
+    <div class="panel-group" style="margin-top:40px">
+        <div class="panel panel-primary">
+            <p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+            <div class="panel-body">
+
+                <form autocomplete="off" action="#" th:action="@{/admin/category/add}"
+                      th:object="${category}" method="post" class="form-horizontal"
+                      role="form">
+                    <h2>Add Category</h2>
+                    <div class="form-group">
+                        <input type="hidden" th:field="*{categoryId}"/>
+
+                        <div class="col-sm-9">
+                            <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                   class="validation-message"></label>
+                            <input type="text" th:field="*{name}" placeholder="Name"
+                                   class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <label	th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                                      class="validation-message"></label>
+                            <input type="text" th:field="*{description}"
+                                   placeholder="Description" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                        </div>
+                    </div>
+
+                    <span th:utext="${successMessage}"></span>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+<script>
+    function deleteProduct(productId){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", "/admin/product/delete/"+ productId, true);
+        xhr.onload = function () {
+            if (xhr.status == "202") {
+                window.location.reload();
+            }
+        }
+        xhr.send(null);
+    }
+
+</script>
+
+</html>

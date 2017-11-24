@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+
+    <form th:action="@{/logout}" method="get">
+        <button class="btn btn-md btn-danger btn-block" name="registration"
+                type="Submit">Logout
+        </button>
+    </form>
+
+    <div>
+        <a href="/admin/home"><button class="btn btn-md btn-danger btn-block" type="Submit">Home</button></a>
+    </div>
+
+    <div class="panel-group" style="margin-top:40px">
+        <div class="panel panel-primary">
+            <p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+            <div class="panel-body">
+
+                <form autocomplete="off" action="#" th:action="@{/admin/product/add}"
+                      th:object="${product}" method="post" class="form-horizontal"
+                      role="form">
+                    <h2>Add Product</h2>
+                    <div class="form-group">
+                        <input type="hidden" th:field="*{productId}"/>
+                        <input type="hidden" th:field="*{categoryId}"/>
+                        <input type="hidden" id="currencyId" th:field="*{currencyId}"/>
+
+                        <div class="col-sm-9">
+                            <label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                   class="validation-message"></label>
+                            <input type="text" th:field="*{name}" placeholder="Name"
+                                   class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <label	th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                                      class="validation-message"></label>
+                            <input type="text" th:field="*{description}"
+                                   placeholder="Description" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <label	th:if="${#fields.hasErrors('price')}" th:errors="*{price}"
+                                      class="validation-message"></label>
+                            <input type="text" th:field="*{price}"
+                                   placeholder="Price" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-9">
+                            <input type="text" th:field="*{currency.symbol}" placeholder="Currency" class="form-control" readonly/>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button onclick="changeCurrencyValue();return false;">Click here to change currency</button>
+                        <select id="currency-selector">
+                            <option th:each="currency : ${currencies}" th:value="${currency.currencyId}" th:text="${currency.symbol}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-top:12px">
+                        <div class="col-sm-9">
+                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                        </div>
+                    </div>
+
+                    <div th:utext="${successMessage}"></div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+<script>
+    function deleteProduct(productId){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", "/admin/product/delete/"+ productId, true);
+        xhr.onload = function () {
+            if (xhr.status == "202") {
+                window.location.reload();
+            }
+        }
+        xhr.send(null);
+    }
+
+    function changeCurrencyValue(){
+
+        var xhr = new XMLHttpRequest();
+        var currencyId = document.getElementById("currencyId").value;
+
+        var currencySelectorDropDown = document.getElementById("currency-selector");
+        var valueSelected = currencySelectorDropDown.options[currencySelectorDropDown.selectedIndex].text;
+        var idOfCurrencySelected = currencySelectorDropDown.options[currencySelectorDropDown.selectedIndex].value;
+
+        if(currencyId.toString() === idOfCurrencySelected.toString()){
+            return;
+        }
+
+        xhr.open("GET", "/admin/currency/value/" + currencyId + "/" + valueSelected, true);
+        xhr.onload = function () {
+            if (xhr.status == "202") {
+                var currentPrice = document.getElementById("price").value * JSON.parse(xhr.response).currentValue;
+                document.getElementById("price").value = currentPrice;
+                document.getElementById("currencyId").value = idOfCurrencySelected;
+            }
+        }
+        xhr.send();
+    }
+
+</script>
+
+</html>

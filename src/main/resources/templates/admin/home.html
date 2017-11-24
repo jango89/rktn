@@ -1,35 +1,91 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
 <head>
-<title>Admin Page</title>
-<link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>Admin Page</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-	<div class="container">
-	
-		<form th:action="@{/logout}" method="get">
-			<button class="btn btn-md btn-danger btn-block" name="registration"
-				type="Submit">Logout</button>
-		</form>    
-		
-		<div class="panel-group" style="margin-top:40px">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<span th:utext="${userName}"></span>
-				</div>
-				<div class="panel-body">
-					<img th:src="@{/images/beer.jpg}" class="img-responsive center-block" width="400" height="400" alt="Beer" /> 
-				</div>
-				<p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
-			</div>
-		</div>
-		
-	</div>
+<div class="container">
+
+    <form th:action="@{/logout}" method="get">
+        <button class="btn btn-md btn-danger btn-block" name="registration"
+                type="Submit">Logout
+        </button>
+    </form>
+
+    <div class="panel-group" style="margin-top:40px">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <span th:utext="${userName}"></span>
+            </div>
+            <p class="admin-message-text text-center" th:utext="${adminMessage}"></p>
+            <div class="panel-body">
+                <table width="100%" height="100%" id="table_chart_6" cellpadding="0" cellspacing="0"
+                       style="font-size: 12px;">
+                    <thead>
+                    <tr style="background: #FFFFFF;">
+                        <th style="border-bottom: 1pt solid rgb(235, 235, 236); color: #096fa8; font-weight: bold;padding: 6px;">
+                            View Products
+                        </td>
+                        <th style="border-bottom: 1pt solid rgb(235, 235, 236); color: #096fa8; font-weight: bold;padding: 6px;">
+                            Category
+                        </td>
+                        <th style="border-bottom: 1pt solid rgb(235, 235, 236); color: #096fa8; font-weight: bold;padding: 6px;">
+                            Category Description
+                        </td>
+                        <th style="border-bottom: 1pt solid rgb(235, 235, 236); color: #096fa8; font-weight: bold;padding: 6px;">
+                            Delete
+                        </th>
+                        <th style="border-bottom: 1pt solid rgb(235, 235, 236); color: #096fa8; font-weight: bold;padding: 6px;">
+                            Edit
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="content, iterStat : ${contents}"
+                        th:style="${iterStat.odd} ? 'padding: 6px; text-align: center;background: #FFFFFF;' : 'padding: 6px; text-align: center;background: #f9fafb'">
+                        <td style="text-align:left;padding:6px;width:35%"><a
+                                th:href="${'/admin/product/all/'+content.categoryId}"
+                                th:utext="${content.categoryId}"></a></td>
+                        <td style="text-align:left;padding:6px;width:35%" th:utext="${content.name}"></td>
+                        <td style="text-align:left;padding:6px;width:35%" th:utext="${content.description}"></td>
+                        <td th:onclick="'deleteCategory(\'' + ${content.categoryId} + '\');'" style="text-align:left;padding:6px;width:35%;cursor:pointer">Delete</td>
+                        <td th:onclick="'editCategory(\'' + ${content.categoryId} + '\');'" style="text-align:left;padding:6px;width:35%;cursor:pointer">Edit</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <a href="/admin/category/get/0">Add Category By Clicking Here</a>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
+
+<script>
+    function deleteCategory(categoryId){
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("DELETE", "/admin/category/delete/"+ categoryId, true);
+        xhr.onload = function () {
+            if (xhr.status == "202") {
+                window.location.reload();
+            }
+        }
+        xhr.send(null);
+    }
+
+    function editCategory(categoryId){
+        window.location.href='/admin/category/get/'+categoryId;
+    }
+
+</script>
+
 </html>
