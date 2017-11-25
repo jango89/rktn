@@ -24,6 +24,15 @@ public class Category {
     @Length(max = 1000, message = "Description should be between 10 and 1000 characters", min = 10)
     private String description;
 
+    public Category() {
+
+    }
+
+    public Category(Integer categoryId, String name) {
+        this.categoryId = categoryId;
+        this.name = name;
+    }
+
     public Integer getCategoryId() {
         return categoryId;
     }

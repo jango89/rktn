@@ -5,12 +5,15 @@ import com.rakuten.model.core.Product;
 import com.rakuten.repository.core.ProductRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -22,6 +25,10 @@ public class ProductService {
 
     public List<Product> getAllProducts(int categoryId) {
         return productRepository.findByCategoryId(categoryId);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepository.findAll(new Sort(Sort.Direction.ASC, "categoryId"));
     }
 
     public void deleteProduct(int productId) {
@@ -52,7 +59,7 @@ public class ProductService {
     }
 
     private Product updateProduct(Product product) {
-        final Product productFound = productRepository.findOne(product.getCategoryId());
+        final Product productFound = productRepository.findOne(product.getProductId());
         Assert.notNull(productFound, "Product not found");
         BeanUtils.copyProperties(product, productFound, getNonUpdatableProperties());
         return productRepository.save(productFound);

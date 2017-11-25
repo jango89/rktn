@@ -48,6 +48,13 @@ public class Product {
     @Column(name = "price")
     private BigDecimal price;
 
+    public Product(){}
+
+    public Product(String name, int categoryId) {
+        this.name = name;
+        this.categoryId = categoryId;
+    }
+
     public Integer getProductId() {
         return productId;
     }

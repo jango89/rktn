@@ -31,12 +31,12 @@ public class CurrencyService {
         return currencyRepository.findAll();
     }
 
-    public Currency getValueForCurrency(int currencyId, String toSymbol) {
+    public Currency getValueForCurrency(int currencyId, String toCurrencySymbol) {
 
         final Currency currency = currencyRepository.findOne(currencyId);
 
         final String urlToInvoke = API_URL.replace("{BASE}", currency.getSymbol())
-                .replace("{TOVALUE}", toSymbol);
+                .replace("{TOVALUE}", toCurrencySymbol);
 
         try {
 

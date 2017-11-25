@@ -17,7 +17,7 @@ public class LoginController {
     private UserService userService;
 
     @ApiOperation(value = "Login page is displayed via this API")
-    @RequestMapping(value = {"/", "/login"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");

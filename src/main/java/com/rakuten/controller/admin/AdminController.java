@@ -2,7 +2,6 @@ package com.rakuten.controller.admin;
 
 import com.rakuten.service.CoreService;
 import com.rakuten.service.core.CategoryService;
-import com.rakuten.service.core.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ public class AdminController {
 
     @Autowired
     private CategoryService categoryService;
-
-    @Autowired
-    private ProductService productService;
 
     @ApiOperation(value = "Admin home page is displayed via this API")
     @RequestMapping(value = "/admin/home", method = RequestMethod.GET)
