@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -38,8 +39,8 @@ public class ProductController {
     @Autowired
     private CurrencyService currencyService;
 
-    @ApiOperation(value = "Add product page is displayed via this API")
-    @RequestMapping(value = "/product/get/{categoryId}/{productId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Add product page is displayed via this API", produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "/product/get/{categoryId}/{productId}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView addProductPage(@PathVariable("categoryId") int categoryId, @PathVariable("productId") int productId) {
         ModelAndView modelAndView = new ModelAndView();
         Product product = productService.getProduct(productId);
@@ -53,14 +54,14 @@ public class ProductController {
         return modelAndView;
     }
 
-    @ApiOperation(value = "Save product is done via this API")
-    @RequestMapping(value = "/product/add", method = RequestMethod.POST)
+    @ApiOperation(value = "Save product is done via this API", produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/product/add", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public Object addProduct(@Valid Product product, BindingResult bindingResult) {
         ModelAndView modelAndView = coreService.getModelAndView();
 
         try {
             final Product savedProduct = productService.saveProduct(product);
-            modelAndView.addObject("product", savedProduct );
+            modelAndView.addObject("product", savedProduct);
         } catch (IllegalArgumentException illExp) {
             bindingResult.rejectValue("name", "error.product", illExp.getMessage());
         } catch (DuplicateNameException exp) {
@@ -78,16 +79,16 @@ public class ProductController {
         return modelAndView;
     }
 
-    @ApiOperation(value = "Delete product is done via this API")
+    @ApiOperation(value = "Delete product is done via this API", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @RequestMapping(value = "/product/delete/{productId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/product/delete/{productId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object deleteProduct(@PathVariable("productId") int productId) {
         productService.deleteProduct(productId);
         return new ResponseEntity<>(null, HttpStatus.ACCEPTED);
     }
 
-    @ApiOperation(value = "All products for a selected category is displayed via this API")
-    @RequestMapping(value = "/product/all/{categoryId}", method = RequestMethod.GET)
+    @ApiOperation(value = "All products for a selected category is displayed via this API", produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "/product/all/{categoryId}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getAllProducts(@PathVariable("categoryId") Integer categoryId) {
         ModelAndView modelAndView = coreService.getModelAndView();
 

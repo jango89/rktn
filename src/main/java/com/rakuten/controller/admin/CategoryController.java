@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 
 @Controller
 @RequestMapping("/admin")
@@ -33,8 +36,8 @@ public class CategoryController {
     @Autowired
     private CoreService coreService;
 
-    @ApiOperation(value = "Get category page is displayed via this API")
-    @RequestMapping(value = "/category/get/{categoryId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get category page is displayed via this API", produces = MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "/category/get/{categoryId}", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     public ModelAndView getCategoryPage(@PathVariable("categoryId") int categoryId) {
         ModelAndView modelAndView = coreService.getModelAndView();
         final Category category = categoryService.getCategory(categoryId);
@@ -43,8 +46,8 @@ public class CategoryController {
         return modelAndView;
     }
 
-    @ApiOperation(value = "Save category is done via this API")
-    @RequestMapping(value = "/category/add", method = RequestMethod.POST)
+    @ApiOperation(value = "Save category is done via this API", produces = MediaType.TEXT_HTML_VALUE, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/category/add", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public ModelAndView addCategory(@Valid Category category, BindingResult bindingResult) {
 
         ModelAndView modelAndView = coreService.getModelAndView();
@@ -67,9 +70,9 @@ public class CategoryController {
         return modelAndView;
     }
 
-    @ApiOperation(value = "Delete category is done via this API")
+    @ApiOperation(value = "Delete category is done via this API", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    @RequestMapping(value = "/category/delete/{categoryId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/category/delete/{categoryId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object deleteCategory(@PathVariable("categoryId") int categoryId) {
         categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(null, HttpStatus.ACCEPTED);
