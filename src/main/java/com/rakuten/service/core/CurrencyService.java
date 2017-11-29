@@ -45,7 +45,7 @@ public class CurrencyService {
 
             Currency finalCurrency = new Currency();
 
-            finalCurrency.setCurrentValue(BigDecimal.valueOf(Double.valueOf(((Map)forObject.get("rates")).get("USD").toString())));
+            finalCurrency.setCurrentValue(BigDecimal.valueOf(Double.valueOf(((Map)forObject.get("rates")).get(toCurrencySymbol).toString())));
 
             return finalCurrency;
         } catch (RestClientException re) {
